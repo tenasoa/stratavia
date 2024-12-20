@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+  <!-- Le head reste le même avec tout le CSS -->
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,89 +8,273 @@
     <meta name="keywords" content="Aviator, stratégie, gains, calcul, performance, temps réel">
     <meta name="author" content="TenaSoa">
     <title>Strategie Aviator by TenaSoa</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <style>
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
       :root {
-        --primary-color: #2196f3;
-        --secondary-color: #1976d2;
-        --background-dark: #1e1e1e;
-        --text-light: #ffffff;
-        --text-secondary: #b0b0b0;
-        --danger-color: #ff4444;
-        --success-color: #00c853;
-        --font-family: "Roboto", sans-serif;
+        --primary-color: #6366f1;
+        --primary-hover: #4f46e5;
+        --secondary-color: #1e293b;
+        --background-dark: #0f172a;
+        --background-light: #f8fafc;
+        --card-bg-dark: #1e293b;
+        --card-bg-light: #ffffff;
+        --text-light: #f8fafc;
+        --text-dark: #0f172a;
+        --text-secondary: #94a3b8;
+        --danger-color: #ef4444;
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+        --font-family: 'Poppins', sans-serif;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
 
       body {
         font-family: var(--font-family);
         background-color: var(--background-dark);
         color: var(--text-light);
-        padding: 20px;
-        margin: 0;
+        line-height: 1.6;
         min-height: 100vh;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      body.light-theme {
+        background-color: var(--background-light);
+        color: var(--text-dark);
+        background: none;
       }
 
       .container {
-        max-width: 1200px;
+        max-width: 1000px;
         margin: 0 auto;
-        padding: 20px;
+        padding: 2rem;
       }
 
       .header {
         text-align: center;
-        margin-bottom: 40px;
+        margin-bottom: 3rem;
+        animation: fadeInDown 1s ease;
       }
 
       .header h1 {
-        font-size: 2.5em;
-        color: var(--primary-color);
-        margin-bottom: 10px;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        background: linear-gradient(to right, #6366f1, #8b5cf6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
 
       .header p {
-        font-size: 1.2em;
+        font-size: 1.1rem;
         color: var(--text-secondary);
-        margin-bottom: 20px;
+        max-width: 600px;
+        margin: 0 auto;
       }
 
       .card {
-        background: #2d2d2d;
-        border-radius: 8px;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
+        background: var(--card-bg-dark);
+        border-radius: 1rem;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        animation: fadeInUp 1s ease;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: background-color 0.3s;
       }
 
-      .card:hover {
-        transform: translateY(-5px);
+      body.light-theme .card {
+        background: var(--card-bg-light);
+        border: 1px solid rgba(0, 0, 0, 0.1);
       }
 
-      h2,
-      h3 {
-        color: var(--primary-color);
-        margin-bottom: 20px;
-        font-size: 1.5em;
+      .card h2,
+      .card h3 {
+        color: var(--text-light);
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+        font-size: 1.5rem;
+      }
+
+      body.light-theme .card h2,
+      body.light-theme .card h3 {
+        color: var(--text-dark);
       }
 
       table {
         width: 100%;
         border-collapse: separate;
-        border-spacing: 0 8px;
-        margin-top: 20px;
+        border-spacing: 0 0.75rem;
       }
 
       th {
-        background-color: #333;
-        color: var(--text-light);
-        padding: 12px;
-        text-align: left;
+        background-color: rgba(255, 255, 255, 0.05);
+        color: var(--text-secondary);
         font-weight: 500;
+        padding: 1rem;
+        text-align: left;
+        border-radius: 0.5rem;
       }
 
       td {
-        background-color: #2d2d2d;
-        padding: 12px;
+        padding: 1rem;
+        background-color: rgba(255, 255, 255, 0.02);
+        border-radius: 0.5rem;
+      }
+
+      input {
+        background-color: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         color: var(--text-light);
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        width: 100%;
+        font-family: var(--font-family);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      body.light-theme input {
+        background-color: rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        color: var(--text-dark);
+      }
+
+      input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+      }
+
+      button {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-family: var(--font-family);
+        font-weight: 500;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      button:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-2px);
+      }
+
+      .delete-btn {
+        background-color: transparent;
+        border: 1px solid var(--danger-color);
+        color: var(--danger-color);
+      }
+
+      .delete-btn:hover {
+        background-color: var(--danger-color);
+        color: white;
+      }
+
+      .countdown {
+        background-color: rgba(255, 255, 255, 0.05);
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-family: monospace;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+      }
+
+      .hint {
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+      }
+
+      .toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        padding: 1rem 1.5rem;
+        border-radius: 0.5rem;
+        color: white;
+        font-weight: 500;
+        visibility: hidden;
+        opacity: 0;
+        transform: translateY(1rem);
+        transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        z-index: 1000;
+      }
+
+      .toast.show {
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .toast.success { background-color: var(--success-color); }
+      .toast.warning { background-color: var(--warning-color); }
+      .toast.error { background-color: var(--danger-color); }
+
+      .action-cell {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 1rem;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .card {
+          padding: 1.5rem;
+        }
+
+        .action-cell {
+          flex-direction: column;
+        }
+
+        td {
+          padding: 0.75rem;
+        }
       }
 
       tr {
@@ -101,169 +286,48 @@
         transform: translateX(100%);
       }
 
-      input {
-        background-color: #333;
-        border: 1px solid #444;
-        color: var(--text-light);
-        padding: 10px 12px;
-        border-radius: 4px;
-        width: 100%;
-        font-family: monospace;
-        font-size: 1em;
-      }
-
-      input:focus {
-        outline: none;
-        border-color: var(--primary-color);
-      }
-
-      button {
-        background-color: var(--primary-color);
-        color: white;
-        border: none;
-        padding: 12px 20px;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        width: 100%;
-        margin-top: 10px;
-        font-size: 1em;
-      }
-
-      button:hover {
-        background-color: var(--secondary-color);
-      }
-
-      .delete-btn {
-        background-color: var(--danger-color);
-        padding: 8px 12px;
-        margin-right: 10px;
-        font-size: 0.9em;
-      }
-
-      .countdown {
-        display: block;
-        margin-top: 10px;
-        color: var(--text-secondary);
-        font-size: 0.9em;
-      }
-
-      .toast {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 15px 25px;
-        border-radius: 4px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        visibility: hidden;
-        opacity: 0;
-        transition: all 0.3s ease;
-        font-size: 0.9em;
-      }
-
-      .toast.show {
-        visibility: visible;
-        opacity: 1;
-      }
-
-      .toast.success {
-        background-color: var(--success-color);
-        color: white;
-      }
-
-      .toast.warning {
-        background-color: #ffa000;
-        color: white;
-      }
-
-      .toast.error {
-        background-color: var(--danger-color);
-        color: white;
-      }
-
-      .hint {
-        color: var(--text-secondary);
-        font-size: 0.8em;
-        margin-top: 4px;
-      }
-
-      .action-cell {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-      }
-
-      .illustration {
-        text-align: center;
-        margin-bottom: 40px;
-      }
-
-      .illustration img {
-        max-width: 100%;
-        height: auto;
-        border-radius: 8px;
-      }
-
-      @media (min-width: 600px) {
-        .action-cell {
-          flex-direction: row;
-        }
-
-        button {
-          width: auto;
-          margin-top: 0;
-        }
-
-        input {
-          width: auto;
-        }
+      tr:hover td {
+        background-color: rgba(255, 255, 255, 0.05);
       }
     </style>
   </head>
   <body>
     <div class="container">
       <div class="header">
-        <h1>Strategie Aviator by TenaSoa</h1>
+        <h1>Stratégie Aviator by TenaSoa</h1>
         <p>Découvrez la meilleure stratégie pour maximiser vos gains avec Aviator. Calculez vos temps de jeu et suivez vos performances en temps réel.</p>
+        <button onclick="toggleTheme()">Basculer vers le thème clair</button>
       </div>
+
       <div class="card">
-        <h2>Faite vous plaisir</h2>
+        <h2>Faites vos calculs</h2>
         <table>
           <tr>
             <th>Période</th>
             <th>Temps</th>
           </tr>
           <tr>
-            <td>1<sup>er</sup> Heure</td>
+            <td>1<sup>ère</sup> Heure</td>
             <td>
-              <input
-                type="text"
-                id="time1"
-                placeholder="HH:MM:SS"
-                value=""
-              />
+              <input type="text" id="time1" placeholder="HH:MM:SS" value="" />
               <div class="hint">Format: HH:MM:SS (ex: 08:19:25)</div>
             </td>
           </tr>
           <tr>
             <td>2<sup>ème</sup> Heure</td>
             <td>
-              <input
-                type="text"
-                id="time2"
-                placeholder="HH:MM:SS"
-                value=""
-              />
+              <input type="text" id="time2" placeholder="HH:MM:SS" value="" />
               <div class="hint">Format: HH:MM:SS (ex: 08:20:59)</div>
             </td>
           </tr>
         </table>
 
-        <button onclick="calculate()">Calculer</button>
+        <button onclick="calculate()">Calculer les résultats</button>
       </div>
 
       <div class="card">
         <h3>Historique des calculs</h3>
+        <button onclick="sortHistory()">Trier par Résultat</button>
         <table id="historyTable">
           <thead>
             <tr>
@@ -295,10 +359,7 @@
         const hours = Math.floor(minutes / 60);
         const mins = Math.floor(minutes % 60);
         const secs = Math.round((minutes % 1) * 60);
-        return `${String(hours).padStart(2, "0")}:${String(mins).padStart(
-          2,
-          "0"
-        )}:${String(secs).padStart(2, "0")}`;
+        return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
       }
 
       function showToast(message, type = "success") {
@@ -346,12 +407,8 @@
           const m = Math.floor((totalSeconds % 3600) / 60);
           const s = totalSeconds % 60;
 
-          countdownElement.textContent = `${String(h).padStart(
-            2,
-            "0"
-          )}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+          countdownElement.textContent = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 
-          // Check if result is within 1 minute
           if (diff <= 60000 && diff > 59000) {
             showToast("Une échéance approche dans 1 minute!", "warning");
           }
@@ -365,17 +422,15 @@
         const historyBody = document.getElementById("historyBody");
         const newRow = document.createElement("tr");
         newRow.innerHTML = `
-                <td>${time1}</td>
-                <td>${time2}</td>
-                <td>${result}</td>
-                <td class="action-cell">
-                    <button class="delete-btn" onclick="deleteRow(this)">Supprimer</button>
-                    <span class="countdown">00:00:00</span>
-                </td>
-            `;
+          <td>${time1}</td>
+          <td>${time2}</td>
+          <td>${result}</td>
+          <td class="action-cell">
+            <button class="delete-btn" onclick="deleteRow(this)">Supprimer</button>
+            <span class="countdown">00:00:00</span>
+          </td>
+        `;
         historyBody.appendChild(newRow);
-
-        // Start countdown for this row
         startCountdown(newRow, result);
       }
 
@@ -393,35 +448,31 @@
         const G2 = timeToMinutes(time1.split(":")[0] + ":00:00");
         const F4 = E4 - D4 * 2 - G2;
 
-        const result = minutesToTime(F4);
+        const resultTime = minutesToTime(F4);
+        addToHistory(time1, time2, resultTime);
+        showToast("Résultat calculé avec succès");
 
-        // Pre-remplir le premier champ avec la valeur du deuxième
+        // Pré-remplir la première heure avec la deuxième heure et vider la deuxième heure
         document.getElementById("time1").value = time2;
         document.getElementById("time2").value = "";
-
-        showToast("Calcul effectué avec succès");
-        addToHistory(time1, time2, result);
       }
 
-      // Vérifier et nettoyer les résultats dépassés toutes les minutes
-      setInterval(() => {
-        const now = new Date();
-        const rows = document
-          .getElementById("historyBody")
-          .getElementsByTagName("tr");
+      function sortHistory() {
+        const historyBody = document.getElementById("historyBody");
+        const rows = Array.from(historyBody.querySelectorAll("tr"));
+        rows.sort((a, b) => {
+          const timeA = a.querySelector("td:nth-child(3)").textContent;
+          const timeB = b.querySelector("td:nth-child(3)").textContent;
+          return timeToMinutes(timeA) - timeToMinutes(timeB);
+        });
+        rows.forEach(row => historyBody.appendChild(row));
+      }
 
-        for (let row of rows) {
-          const resultTime = row.cells[2].textContent;
-          const [hours, minutes, seconds] = resultTime.split(":").map(Number);
-          const resultDate = new Date();
-          resultDate.setHours(hours, minutes, seconds);
-
-          if (resultDate < now) {
-            row.classList.add("fade-out");
-            setTimeout(() => row.remove(), 300);
-          }
-        }
-      }, 60000);
+      function toggleTheme() {
+        document.body.classList.toggle("light-theme");
+        const button = document.querySelector("button[onclick='toggleTheme()']");
+        button.textContent = document.body.classList.contains("light-theme") ? "Basculer vers le thème sombre" : "Basculer vers le thème clair";
+      }
     </script>
   </body>
 </html>
