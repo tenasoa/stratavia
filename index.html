@@ -1,6 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Découvrez la meilleure stratégie pour maximiser vos gains avec Aviator. Calculez vos temps de jeu et suivez vos performances en temps réel.">
+    <meta name="keywords" content="Aviator, stratégie, gains, calcul, performance, temps réel">
+    <meta name="author" content="TenaSoa">
     <title>Strategie Aviator by TenaSoa</title>
     <style>
       :root {
@@ -11,10 +16,11 @@
         --text-secondary: #b0b0b0;
         --danger-color: #ff4444;
         --success-color: #00c853;
+        --font-family: "Roboto", sans-serif;
       }
 
       body {
-        font-family: "Roboto", sans-serif;
+        font-family: var(--font-family);
         background-color: var(--background-dark);
         color: var(--text-light);
         padding: 20px;
@@ -28,18 +34,41 @@
         padding: 20px;
       }
 
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        color: var(--primary-color);
+        margin-bottom: 10px;
+      }
+
+      .header p {
+        font-size: 1.2em;
+        color: var(--text-secondary);
+        margin-bottom: 20px;
+      }
+
       .card {
         background: #2d2d2d;
         border-radius: 8px;
         padding: 20px;
         margin-bottom: 20px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
       }
 
       h2,
       h3 {
         color: var(--primary-color);
         margin-bottom: 20px;
+        font-size: 1.5em;
       }
 
       table {
@@ -76,10 +105,11 @@
         background-color: #333;
         border: 1px solid #444;
         color: var(--text-light);
-        padding: 8px 12px;
+        padding: 10px 12px;
         border-radius: 4px;
-        width: 150px;
+        width: 100%;
         font-family: monospace;
+        font-size: 1em;
       }
 
       input:focus {
@@ -91,10 +121,13 @@
         background-color: var(--primary-color);
         color: white;
         border: none;
-        padding: 10px 20px;
+        padding: 12px 20px;
         border-radius: 4px;
         cursor: pointer;
         transition: background-color 0.3s ease;
+        width: 100%;
+        margin-top: 10px;
+        font-size: 1em;
       }
 
       button:hover {
@@ -103,16 +136,17 @@
 
       .delete-btn {
         background-color: var(--danger-color);
-        padding: 6px 12px;
+        padding: 8px 12px;
         margin-right: 10px;
+        font-size: 0.9em;
       }
 
       .progress-container {
         display: inline-block;
-        width: 200px;
-        height: 4px;
+        width: 100%;
+        height: 6px;
         background-color: #444;
-        border-radius: 2px;
+        border-radius: 3px;
         margin-left: 10px;
         vertical-align: middle;
       }
@@ -120,13 +154,14 @@
       .progress-bar {
         height: 100%;
         background-color: var(--primary-color);
-        border-radius: 2px;
+        border-radius: 3px;
         transition: width 1s linear;
       }
 
       .countdown {
         margin-left: 10px;
         color: var(--text-secondary);
+        font-size: 0.9em;
       }
 
       .toast {
@@ -139,6 +174,7 @@
         visibility: hidden;
         opacity: 0;
         transition: all 0.3s ease;
+        font-size: 0.9em;
       }
 
       .toast.show {
@@ -170,11 +206,42 @@
       .action-cell {
         display: flex;
         align-items: center;
+        flex-direction: column;
+      }
+
+      .illustration {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .illustration img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+      }
+
+      @media (min-width: 600px) {
+        .action-cell {
+          flex-direction: row;
+        }
+
+        button {
+          width: auto;
+          margin-top: 0;
+        }
+
+        input {
+          width: auto;
+        }
       }
     </style>
   </head>
   <body>
     <div class="container">
+      <div class="header">
+        <h1>Strategie Aviator by TenaSoa</h1>
+        <p>Découvrez la meilleure stratégie pour maximiser vos gains avec Aviator. Calculez vos temps de jeu et suivez vos performances en temps réel.</p>
+      </div>
       <div class="card">
         <h2>Faite vous plaisir</h2>
         <table>
@@ -189,7 +256,7 @@
                 type="text"
                 id="time1"
                 placeholder="HH:MM:SS"
-                value="08:19:25"
+                value=""
               />
               <div class="hint">Format: HH:MM:SS (ex: 08:19:25)</div>
             </td>
@@ -201,7 +268,7 @@
                 type="text"
                 id="time2"
                 placeholder="HH:MM:SS"
-                value="08:20:59"
+                value=""
               />
               <div class="hint">Format: HH:MM:SS (ex: 08:20:59)</div>
             </td>
