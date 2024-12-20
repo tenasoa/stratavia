@@ -141,25 +141,9 @@
         font-size: 0.9em;
       }
 
-      .progress-container {
-        display: inline-block;
-        width: 100%;
-        height: 6px;
-        background-color: #444;
-        border-radius: 3px;
-        margin-left: 10px;
-        vertical-align: middle;
-      }
-
-      .progress-bar {
-        height: 100%;
-        background-color: var(--primary-color);
-        border-radius: 3px;
-        transition: width 1s linear;
-      }
-
       .countdown {
-        margin-left: 10px;
+        display: block;
+        margin-top: 10px;
         color: var(--text-secondary);
         font-size: 0.9em;
       }
@@ -337,14 +321,8 @@
         showToast("Entrée supprimée avec succès");
       }
 
-      function updateProgressBar(progressBar, remainingTime, totalTime) {
-        const percentage = (remainingTime / totalTime) * 100;
-        progressBar.style.width = `${percentage}%`;
-      }
-
       function startCountdown(row, targetTime) {
         const countdownElement = row.querySelector(".countdown");
-        const progressBar = row.querySelector(".progress-bar");
 
         function updateCountdown() {
           const now = new Date();
@@ -377,10 +355,6 @@
           if (diff <= 60000 && diff > 59000) {
             showToast("Une échéance approche dans 1 minute!", "warning");
           }
-
-          // Update progress bar
-          const totalTime = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-          updateProgressBar(progressBar, diff, totalTime);
         }
 
         updateCountdown();
@@ -396,9 +370,6 @@
                 <td>${result}</td>
                 <td class="action-cell">
                     <button class="delete-btn" onclick="deleteRow(this)">Supprimer</button>
-                    <div class="progress-container">
-                        <div class="progress-bar"></div>
-                    </div>
                     <span class="countdown">00:00:00</span>
                 </td>
             `;
