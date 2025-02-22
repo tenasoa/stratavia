@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <!-- Le head reste le même avec tout le CSS -->
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Découvrez la meilleure stratégie pour maximiser vos gains avec Aviator. Calculez vos temps de jeu et suivez vos performances en temps réel.">
-    <meta name="keywords" content="Aviator, stratégie, gains, calcul, performance, temps réel">
-    <meta name="author" content="TenaSoa">
-    <title>Strategie Aviator by TenaSoa</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Découvrez la meilleure stratégie pour maximiser vos gains avec Aviator. Calculez vos temps de jeu et suivez vos performances en temps réel." />
+    <meta name="keywords" content="Aviator, stratégie, gains, calcul, performance, temps réel" />
+    <meta name="author" content="TenaSoa" />
+    <title>Stratégie Aviator by TenaSoa</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
@@ -234,47 +234,21 @@
       }
 
       @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
       @keyframes fadeInDown {
-        from {
-          opacity: 0;
-          transform: translateY(-20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
       @media (max-width: 768px) {
-        .container {
-          padding: 1rem;
-        }
-
-        .header h1 {
-          font-size: 2rem;
-        }
-
-        .card {
-          padding: 1.5rem;
-        }
-
-        .action-cell {
-          flex-direction: column;
-        }
-
-        td {
-          padding: 0.75rem;
-        }
+        .container { padding: 1rem; }
+        .header h1 { font-size: 2rem; }
+        .card { padding: 1.5rem; }
+        .action-cell { flex-direction: column; }
+        td { padding: 0.75rem; }
       }
 
       tr {
@@ -288,6 +262,18 @@
 
       tr:hover td {
         background-color: rgba(255, 255, 255, 0.05);
+      }
+
+      .chart-container {
+        margin-top: 2rem;
+        padding: 1rem;
+        background: var(--card-bg-dark);
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+
+      body.light-theme .chart-container {
+        background: var(--card-bg-light);
       }
     </style>
   </head>
@@ -321,13 +307,12 @@
             </td>
           </tr>
         </table>
-
-        <button onclick="calculate()">Calculer les résultats</button>
+        <button onclick="calculate()"><i class="fas fa-calculator"></i> Calculer les résultats</button>
       </div>
 
       <div class="card">
         <h3>Historique des calculs</h3>
-        <button onclick="sortHistory()">Trier par Résultat</button>
+        <button onclick="sortHistory()"><i class="fas fa-sort"></i> Trier par Résultat</button>
         <table id="historyTable">
           <thead>
             <tr>
@@ -340,48 +325,62 @@
           <tbody id="historyBody"></tbody>
         </table>
       </div>
+
+      <div class="card chart-container">
+        <h3>Tendances des Résultats</h3>
+        <canvas id="resultsChart"></canvas>
+      </div>
     </div>
 
     <div id="toast" class="toast"></div>
 
     <script>
+      // Validation du format de l'heure
       function validateTimeFormat(timeStr) {
         const pattern = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
-        return pattern.test(timeStr);
+        if (!pattern.test(timeStr)) {
+          showToast("Format d'heure invalide. Utilisez HH:MM:SS (ex: 08:19:25)", "error");
+          return false;
+        }
+        return true;
       }
 
+      // Conversion de l'heure en minutes
       function timeToMinutes(timeStr) {
         const [hours, minutes, seconds] = timeStr.split(":").map(Number);
         return hours * 60 + minutes + seconds / 60;
       }
 
+      // Conversion des minutes en heure
       function minutesToTime(minutes) {
+        minutes = (minutes + 1440) % 1440; // Ajuster pour rester dans 24h
         const hours = Math.floor(minutes / 60);
         const mins = Math.floor(minutes % 60);
         const secs = Math.round((minutes % 1) * 60);
         return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
       }
 
+      // Affichage des notifications toast
       function showToast(message, type = "success") {
         const toast = document.getElementById("toast");
         toast.textContent = message;
         toast.className = "toast " + type;
         toast.classList.add("show");
-
-        setTimeout(() => {
-          toast.classList.remove("show");
-        }, 3000);
+        setTimeout(() => toast.classList.remove("show"), 3000);
       }
 
+      // Suppression d'une ligne de l'historique
       function deleteRow(button) {
         const row = button.parentNode.parentNode;
         row.classList.add("fade-out");
         setTimeout(() => {
-          row.parentNode.removeChild(row);
+          row.remove();
+          updateChart();
         }, 300);
         showToast("Entrée supprimée avec succès");
       }
 
+      // Démarrage du compte à rebours
       function startCountdown(row, targetTime) {
         const countdownElement = row.querySelector(".countdown");
 
@@ -391,9 +390,7 @@
           const [hours, minutes, seconds] = targetTime.split(":").map(Number);
           target.setHours(hours, minutes, seconds);
 
-          if (target < now) {
-            target.setDate(target.getDate() + 1);
-          }
+          if (target < now) target.setDate(target.getDate() + 1);
 
           const diff = target - now;
           if (diff <= 0) {
@@ -406,11 +403,13 @@
           const h = Math.floor(totalSeconds / 3600);
           const m = Math.floor((totalSeconds % 3600) / 60);
           const s = totalSeconds % 60;
-
           countdownElement.textContent = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 
           if (diff <= 60000 && diff > 59000) {
             showToast("Une échéance approche dans 1 minute!", "warning");
+            if (Notification.permission === "granted") {
+              new Notification("Moment optimal pour jouer dans 1 minute !");
+            }
           }
         }
 
@@ -418,6 +417,7 @@
         return setInterval(updateCountdown, 1000);
       }
 
+      // Ajout à l'historique
       function addToHistory(time1, time2, result) {
         const historyBody = document.getElementById("historyBody");
         const newRow = document.createElement("tr");
@@ -426,53 +426,89 @@
           <td>${time2}</td>
           <td>${result}</td>
           <td class="action-cell">
-            <button class="delete-btn" onclick="deleteRow(this)">Supprimer</button>
+            <button class="delete-btn" onclick="deleteRow(this)"><i class="fas fa-trash"></i> Supprimer</button>
             <span class="countdown">00:00:00</span>
           </td>
         `;
         historyBody.appendChild(newRow);
         startCountdown(newRow, result);
+        updateChart();
       }
 
+      // Calcul des résultats
       function calculate() {
         const time1 = document.getElementById("time1").value;
         const time2 = document.getElementById("time2").value;
 
-        if (!validateTimeFormat(time1) || !validateTimeFormat(time2)) {
-          showToast("Format d'heure invalide. Utilisez HH:MM:SS", "error");
-          return;
-        }
+        if (!validateTimeFormat(time1) || !validateTimeFormat(time2)) return;
 
         const D4 = timeToMinutes(time2) - timeToMinutes(time1);
         const E4 = timeToMinutes(time2) + timeToMinutes(time1);
         const G2 = timeToMinutes(time1.split(":")[0] + ":00:00");
-        const F4 = E4 - D4 * 2 - G2;
+        let F4 = E4 - D4 * 2 - G2;
 
+        F4 = (F4 + 1440) % 1440; // Ajuster pour rester dans 24h
         const resultTime = minutesToTime(F4);
+
         addToHistory(time1, time2, resultTime);
         showToast("Résultat calculé avec succès");
 
-        // Pré-remplir la première heure avec la deuxième heure et vider la deuxième heure
         document.getElementById("time1").value = time2;
         document.getElementById("time2").value = "";
       }
 
+      // Tri de l'historique
       function sortHistory() {
         const historyBody = document.getElementById("historyBody");
         const rows = Array.from(historyBody.querySelectorAll("tr"));
-        rows.sort((a, b) => {
-          const timeA = a.querySelector("td:nth-child(3)").textContent;
-          const timeB = b.querySelector("td:nth-child(3)").textContent;
-          return timeToMinutes(timeA) - timeToMinutes(timeB);
-        });
+        rows.sort((a, b) => timeToMinutes(a.cells[2].textContent) - timeToMinutes(b.cells[2].textContent));
         rows.forEach(row => historyBody.appendChild(row));
       }
 
+      // Changement de thème
       function toggleTheme() {
         document.body.classList.toggle("light-theme");
         const button = document.querySelector("button[onclick='toggleTheme()']");
         button.textContent = document.body.classList.contains("light-theme") ? "Basculer vers le thème sombre" : "Basculer vers le thème clair";
       }
+
+      // Mise à jour du graphique
+      function updateChart() {
+        const historyBody = document.getElementById("historyBody");
+        const rows = historyBody.querySelectorAll("tr");
+        const labels = [];
+        const data = [];
+
+        rows.forEach((row, index) => {
+          const result = row.cells[2].textContent;
+          labels.push(`Résultat ${index + 1}`);
+          data.push(timeToMinutes(result));
+        });
+
+        const ctx = document.getElementById("resultsChart").getContext("2d");
+        if (window.resultsChart) window.resultsChart.destroy();
+
+        window.resultsChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [{
+              label: "Temps de Résultat (en minutes)",
+              data: data,
+              borderColor: "#6366f1",
+              backgroundColor: "rgba(99, 102, 241, 0.2)",
+              fill: true,
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true } }
+          }
+        });
+      }
+
+      // Demande de permission pour les notifications
+      if (Notification.permission !== "granted") Notification.requestPermission();
     </script>
   </body>
 </html>
